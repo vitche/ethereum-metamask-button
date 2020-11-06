@@ -30,6 +30,19 @@
 
             console.log("Unlocked accounts", accounts);
 
+            if ("ETH" === symbol) {
+                const transactionParameters = {
+                    to: to,
+                    from: ethereum.selectedAddress,
+                    value: web3.toHex(amount)
+                };
+                ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [transactionParameters],
+                });
+                return;
+            }
+
             // Create the contract proxy
             const token = getToken(symbol);
             const contract = web3.eth.contract(token.abi).at(token.address);
@@ -39,6 +52,15 @@
     }
 </script>
 <body>
+<button onclick="pay(
+    'ETH',
+    '0xeddc87c8d7680CBD977b734B040e7F581d318e29',
+    web3.toWei('1', 'ether'),
+    (error, result) => {
+        console.log(error, result);
+    }
+);">Pay ETH</button>
+<br/>
 <button onclick="pay(
     'USDT',
     '0xeddc87c8d7680CBD977b734B040e7F581d318e29',
